@@ -9,6 +9,7 @@
 var fs = require('fs');
 var glob = require('glob');
 var path = require('path');
+var mkdirp = require('mkdirp');
 var handlebars = require('handlebars');
 var beautify = require('js-beautify').js_beautify;
 var validate = require('./validate');
@@ -19,7 +20,7 @@ function task(grunt) {
     grunt.registerMultiTask('iwc', 'Inline web component compiler.', function () {
         // Merge task-specific and/or target-specific options with these defaults.
         var options = this.options({
-            postfix: '.html',
+            postfix: '.js',
             script: 'script.js',
             styles: 'styles.css',
             markup: 'markup.html'
@@ -29,8 +30,12 @@ function task(grunt) {
         this.files.forEach(function (f) {
             // Validate config
             validate.reset(grunt);
-            if (!validate.exists(f.dest, 'dest')) {
-                return false;
+            if (!grunt.file.exists(f.dest)) {
+                mkdirp(f.dest, function (err) {
+                    if (!validate.exists(f.dest, 'dest')) {
+                        return false;
+                    }
+                });
             }
 
             // Process each folder

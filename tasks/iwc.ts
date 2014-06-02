@@ -13,6 +13,7 @@ declare var require;
 var fs:any = require('fs');
 var glob:any = require('glob');
 var path:any = require('path');
+var mkdirp = require('mkdirp');
 var handlebars:any = require('handlebars');
 var beautify:any = require('js-beautify').js_beautify;
 var validate:any = require('./validate');
@@ -24,7 +25,7 @@ function task(grunt) {
 
         // Merge task-specific and/or target-specific options with these defaults.
         var options = this.options({
-            postfix: '.html',
+            postfix: '.js',
             script: 'script.js',
             styles: 'styles.css',
             markup: 'markup.html'
@@ -35,7 +36,13 @@ function task(grunt) {
 
             // Validate config
             validate.reset(grunt);
-            if (!validate.exists(f.dest, 'dest')) { return false; }
+            if (!grunt.file.exists(f.dest)) {
+                mkdirp(f.dest, function(err) { 
+                    if (!validate.exists(f.dest, 'dest')) {
+                        return false;
+                    }
+                });
+            }
 
             // Process each folder
             f.src.forEach(function (target) {
