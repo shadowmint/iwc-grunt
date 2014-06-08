@@ -35,6 +35,18 @@ function template(name) {
     return handlebars.compile(raw);
 }
 
+/* Set the template to use */
+function set_template(path) {
+    var tpath = process.cwd() + '/' + path;
+    try  {
+        var raw = fs.readFileSync(tpath, 'utf8');
+        output_content_template = handlebars.compile(raw);
+    } catch (e) {
+        exports.grunt.warn('Invalid template: ' + tpath);
+    }
+}
+exports.set_template = set_template;
+
 /* Get the output folder for a specific source */
 function output() {
     return output_template({

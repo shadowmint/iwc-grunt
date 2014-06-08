@@ -28,7 +28,8 @@ function task(grunt) {
             postfix: '.js',
             script: 'script.js',
             styles: 'styles.css',
-            markup: 'markup.html'
+            markup: 'markup.html',
+            template: null
         });
 
         // Process all segments
@@ -37,7 +38,7 @@ function task(grunt) {
             // Validate config
             validate.reset(grunt);
             if (!grunt.file.exists(f.dest)) {
-                mkdirp(f.dest, function(err) { 
+                mkdirp(f.dest, function(err) {
                     if (!validate.exists(f.dest, 'dest')) {
                         return false;
                     }
@@ -56,6 +57,12 @@ function task(grunt) {
                 actions.options = options;
                 actions.target = target;
                 actions.dest = f.dest;
+
+                // Apply the template if there is one
+                console.log(options);
+                if (options.template) {
+                  actions.set_template(options.template);
+                }
 
                 // Generate output string
                 var output_file = actions.output();
