@@ -48,11 +48,13 @@ function set_template(path) {
 exports.set_template = set_template;
 
 /* Get the output folder for a specific source */
-function output() {
+function output(name) {
+    if (typeof name === "undefined") { name = null; }
+    var used_name = name ? name : path.basename(exports.target);
     return output_template({
         folder: exports.dest,
         postfix: exports.options.postfix,
-        name: path.basename(exports.target)
+        name: used_name
     });
 }
 exports.output = output;

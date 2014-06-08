@@ -24,6 +24,7 @@ function task(grunt) {
             script: 'script.js',
             styles: 'styles.css',
             markup: 'markup.html',
+            output: null,
             template: null
         });
 
@@ -56,13 +57,12 @@ function task(grunt) {
                 actions.dest = f.dest;
 
                 // Apply the template if there is one
-                console.log(options);
                 if (options.template) {
                     actions.set_template(options.template);
                 }
 
                 // Generate output string
-                var output_file = actions.output();
+                var output_file = actions.output(options.output);
 
                 // Validate the components of this component exist
                 var parts = actions.parts();

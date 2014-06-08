@@ -54,11 +54,12 @@ export function set_template(path:string):void {
 }
 
 /* Get the output folder for a specific source */
-export function output():string {
+export function output(name:string = null):string {
+  var used_name = name ? name : path.basename(target);
   return output_template({
     folder: dest,
     postfix: options.postfix,
-    name: path.basename(target)
+    name: used_name
   });
 }
 
