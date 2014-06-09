@@ -39,11 +39,10 @@ function task(grunt) {
             // Validate config
             validate.reset(grunt);
             if (!grunt.file.exists(f.dest)) {
-                mkdirp(f.dest, function(err) {
-                    if (!validate.exists(f.dest, 'dest')) {
-                        return false;
-                    }
-                });
+                mkdirp.sync(f.dest);
+                if (!validate.exists(f.dest, 'dest')) {
+                    return false;
+                }
             }
 
             // Process each folder
