@@ -82,7 +82,7 @@ export function combine(parts:IwcParts):string {
   parts.styles = JSON.stringify(fs.readFileSync(parts.styles, 'utf8'));
   parts.markup = JSON.stringify(fs.readFileSync(parts.markup, 'utf8'));
   for (var key in parts.resource_map) {
-    parts.resource_map[key] = JSON.stringify(fs.readFileSync(parts.resource_map[key], 'utf8'));
+    parts.resource_map[key] = fs.readFileSync(parts.resource_map[key], 'utf8');
   }
   parts.resources = JSON.stringify(parts.resource_map);
   return output_content_template(parts);
