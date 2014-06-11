@@ -16,8 +16,8 @@ var path:any = require('path');
 var mkdirp = require('mkdirp');
 var handlebars:any = require('handlebars');
 var beautify:any = require('js-beautify').js_beautify;
-var validate:any = require('./validate');
-var actions:any = require('./actions');
+var validate:any = require('./lib/validate');
+var actions:any = require('./lib/actions');
 
 /* The build task to invoke */
 function task(grunt) {
@@ -29,6 +29,7 @@ function task(grunt) {
             script: 'script.js',
             styles: 'styles.css',
             markup: 'markup.html',
+            resources: null,
             output: null,
             template: null
         });

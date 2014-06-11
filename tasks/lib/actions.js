@@ -9,6 +9,7 @@
 var path = require('path');
 var fs = require('fs');
 var handlebars = require('handlebars');
+var glob = require('glob');
 
 /* Internal grunt state cache */
 exports.grunt = null;
@@ -64,7 +65,9 @@ function parts() {
     var rtn = {
         script: output_template({ folder: exports.target, name: exports.options.script, postfix: '' }),
         styles: output_template({ folder: exports.target, name: exports.options.styles, postfix: '' }),
-        markup: output_template({ folder: exports.target, name: exports.options.markup, postfix: '' })
+        markup: output_template({ folder: exports.target, name: exports.options.markup, postfix: '' }),
+        resource_map: resources(),
+        resources: ''
     };
     return rtn;
 }
@@ -75,9 +78,37 @@ function combine(parts) {
     parts.script = fs.readFileSync(parts.script, 'utf8');
     parts.styles = JSON.stringify(fs.readFileSync(parts.styles, 'utf8'));
     parts.markup = JSON.stringify(fs.readFileSync(parts.markup, 'utf8'));
+    for (var key in parts.resource_map) {
+        parts.resource_map[key] = JSON.stringify(fs.readFileSync(parts.resource_map[key], 'utf8'));
+    }
+    parts.resources = JSON.stringify(parts.resource_map);
     return output_content_template(parts);
 }
 exports.combine = combine;
+
+/* Recursively walk the directories and invoke a callback on each target */
+function resources() {
+    if (exports.options.resources) {
+        var items = [];
+        var tmp = exports.options.resources;
+        if (typeof tmp == 'string') {
+            exports.options.resources = [tmp];
+        }
+        for (var i = 0; i < exports.options.resources.length; ++i) {
+            var file = exports.target + '/' + exports.options.resources[i];
+            items = items.concat(glob.sync(file));
+        }
+        var rtn = {};
+        for (var i = 0; i < items.length; ++i) {
+            var key = path.basename(items[i]);
+            if (key != exports.options.script && key != exports.options.styles && key != exports.options.markup) {
+                rtn[key] = items[i];
+            }
+        }
+        return rtn;
+    }
+    return {};
+}
 
 
 //# sourceMappingURL=actions.js.map

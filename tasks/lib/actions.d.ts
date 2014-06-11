@@ -10,10 +10,15 @@ export interface IwcParts {
     script: string;
     styles: string;
     markup: string;
+    resources: string;
+    resource_map: {
+        [key: string]: string;
+    };
 }
 export interface IwcOptions {
     script: string;
     styles: string;
     markup: string;
     postfix: string;
+    resources: string[];
 }
